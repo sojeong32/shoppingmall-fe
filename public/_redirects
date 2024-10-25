@@ -1,0 +1,2 @@
+/api/* https://shopping-mall-24f64b2222a7.herokuapp.com/api/:splat 200
+/*    /index.html   200
