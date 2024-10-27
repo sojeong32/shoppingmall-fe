@@ -15,24 +15,37 @@ const Login = () => {
   const { user, loginError } = useSelector((state) => state.user);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false); // Login버튼 disable state
 
   useEffect(() => {
     if (loginError) {
+      setIsSubmitting(false); // 로그인 실패 시 다시 active
       dispatch(clearErrors());
     }
   }, [navigate]);
-  const handleLoginWithEmail = (event) => {
+  const handleLoginWithEmail = async (event) => {
     event.preventDefault();
-    dispatch(loginWithEmail({ email, password }));
+    setIsSubmitting(true); // 로그인 시 disable
+    try {
+      await dispatch(loginWithEmail({ email, password })).unwrap();
+    } catch (error) {
+      console.log("로그인 실패: ", error);
+    } finally {
+      setIsSubmitting(false); // 로그인 시도 후 active
+    }
   };
 
   const handleGoogleLogin = async (googleData) => {
     //구글 로그인 하기
   };
 
-  if (user) {
-    navigate("/");
-  }
+  // 로그인 후 유저정보가 있는 경우 로그인페이지를 보여주지 않도록 함
+  useEffect(() => {
+    if (user) {
+      navigate("/");
+    }
+  }, [user]);
+
   return (
     <>
       <Container className="login-area">
@@ -62,8 +75,8 @@ const Login = () => {
             />
           </Form.Group>
           <div className="display-space-between login-button-area">
-            <Button variant="danger" type="submit">
-              Login
+            <Button variant="danger" type="submit" disabled={isSubmitting}>
+              {isSubmitting ? "Logging in..." : "Login"}
             </Button>
             <div>
               아직 계정이 없으세요?<Link to="/register">회원가입 하기</Link>{" "}
