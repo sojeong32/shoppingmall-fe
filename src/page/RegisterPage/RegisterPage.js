@@ -5,7 +5,7 @@ import { useNavigate } from "react-router";
 
 import "./style/register.style.css";
 
-import { registerUser } from "../../features/user/userSlice";
+import { clearErrors, registerUser } from "../../features/user/userSlice";
 
 const RegisterPage = () => {
   const dispatch = useDispatch();
@@ -46,6 +46,13 @@ const RegisterPage = () => {
       setIsSubmitting(false);
     }
   }, [registrationError]);
+
+  useEffect(() => {
+    // 컴포넌트가 언마운트될 때 registrationError를 null로 초기화
+    return () => {
+      dispatch(clearErrors(registrationError));
+    };
+  }, []);
 
   const handleChange = (event) => {
     event.preventDefault();

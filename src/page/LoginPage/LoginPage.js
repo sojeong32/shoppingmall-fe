@@ -23,11 +23,12 @@ const Login = () => {
       dispatch(clearErrors());
     }
   }, [navigate]);
+
   const handleLoginWithEmail = async (event) => {
     event.preventDefault();
     setIsSubmitting(true); // 로그인 시 disable
     try {
-      await dispatch(loginWithEmail({ email, password })).unwrap();
+      await dispatch(loginWithEmail({ email, password, navigate })).unwrap();
     } catch (error) {
       console.log("로그인 실패: ", error);
     } finally {
@@ -44,7 +45,7 @@ const Login = () => {
     if (user) {
       navigate("/");
     }
-  }, [user]);
+  }, [user, navigate]);
 
   return (
     <>

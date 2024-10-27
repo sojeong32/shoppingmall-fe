@@ -6,16 +6,29 @@ import { initialCart } from "../cart/cartSlice";
 
 export const loginWithEmail = createAsyncThunk(
   "user/loginWithEmail",
-  async ({ email, password }, { rejectWithValue }) => {
+  async ({ email, password, navigate }, { dispatch, rejectWithValue }) => {
     try {
-      const response = await api.post("/user/login", { email, password });
+      const response = await api.post("/auth/login", { email, password });
       // 성공
       sessionStorage.setItem("user", response.data.token);
-      // Login page 성공시 navigate처리
+      // Login page 성공시 토스트메세지, navigate처리
+      dispatch(
+        showToastMessage({
+          message: "로그인을 성공했습니다",
+          status: "success",
+        })
+      );
+      navigate("/");
       return response.data;
     } catch (error) {
       // 실패
-      // 실패시 생긴 에러값을 reducer에 저장
+      // 실패시 토스트 메세지 보여주고 생긴 에러값을 reducer에 저장
+      dispatch(
+        showToastMessage({
+          message: "로그인에 실패했습니다",
+          status: "error",
+        })
+      );
       return rejectWithValue(error.error);
     }
   }
@@ -84,6 +97,19 @@ const userSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
+      .addCase(loginWithEmail.pending, (state) => {
+        state.loading = true;
+        state.loginError = null;
+      })
+      .addCase(loginWithEmail.fulfilled, (state, action) => {
+        state.loading = false;
+        state.user = action.payload;
+        state.loginError = null;
+      })
+      .addCase(loginWithEmail.rejected, (state, action) => {
+        state.loading = false;
+        state.loginError = action.payload; // loginError에 에러 메시지 저장
+      })
       .addCase(registerUser.pending, (state) => {
         state.loading = true;
       })
