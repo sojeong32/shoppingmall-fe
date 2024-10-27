@@ -10,7 +10,7 @@ export const loginWithEmail = createAsyncThunk(
     try {
       const response = await api.post("/auth/login", { email, password });
       // 성공
-      sessionStorage.setItem("user", response.data.token);
+      sessionStorage.setItem("token", response.data.token);
       // Login page 성공시 토스트메세지, navigate처리
       dispatch(
         showToastMessage({
@@ -39,7 +39,28 @@ export const loginWithGoogle = createAsyncThunk(
   async (token, { rejectWithValue }) => {}
 );
 
-export const logout = () => (dispatch) => {};
+export const logout = createAsyncThunk(
+  "user/logout",
+  async (_, { dispatch }) => {
+    try {
+      // 로컬 스토리지의 토큰 제거
+      sessionStorage.removeItem("token");
+
+      dispatch(
+        showToastMessage({
+          message: "로그아웃 되었습니다.",
+          status: "success",
+        })
+      );
+
+      return null;
+    } catch (error) {
+      console.error("Logout error:", error);
+      throw error;
+    }
+  }
+);
+
 export const registerUser = createAsyncThunk(
   "user/registerUser",
   async (
@@ -77,7 +98,14 @@ export const registerUser = createAsyncThunk(
 
 export const loginWithToken = createAsyncThunk(
   "user/loginWithToken",
-  async (_, { rejectWithValue }) => {}
+  async (_, { rejectWithValue }) => {
+    try {
+      const response = await api.get("/user/me");
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(error.error);
+    }
+  }
 );
 
 const userSlice = createSlice({
@@ -99,11 +127,10 @@ const userSlice = createSlice({
     builder
       .addCase(loginWithEmail.pending, (state) => {
         state.loading = true;
-        state.loginError = null;
       })
       .addCase(loginWithEmail.fulfilled, (state, action) => {
         state.loading = false;
-        state.user = action.payload;
+        state.user = action.payload.user;
         state.loginError = null;
       })
       .addCase(loginWithEmail.rejected, (state, action) => {
@@ -119,6 +146,22 @@ const userSlice = createSlice({
       })
       .addCase(registerUser.rejected, (state, action) => {
         state.registrationError = action.payload;
+      })
+      .addCase(loginWithToken.fulfilled, (state, action) => {
+        state.user = action.payload.user;
+      })
+      .addCase(logout.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(logout.fulfilled, (state) => {
+        state.user = null;
+        state.loading = false;
+        state.loginError = null;
+        state.registrationError = null;
+        state.success = false;
+      })
+      .addCase(logout.rejected, (state) => {
+        state.loading = false;
       });
   },
 });

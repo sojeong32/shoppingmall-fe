@@ -41,11 +41,9 @@ const Login = () => {
   };
 
   // 로그인 후 유저정보가 있는 경우 로그인페이지를 보여주지 않도록 함
-  useEffect(() => {
-    if (user) {
-      navigate("/");
-    }
-  }, [user, navigate]);
+  if (user) {
+    navigate("/");
+  }
 
   return (
     <>
