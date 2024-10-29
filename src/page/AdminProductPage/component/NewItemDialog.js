@@ -8,6 +8,7 @@ import {
   clearError,
   createProduct,
   editProduct,
+  getProductList,
 } from "../../../features/product/productSlice";
 
 const InitialFormData = {
@@ -31,11 +32,11 @@ const NewItemDialog = ({ mode, showDialog, setShowDialog }) => {
   const [stock, setStock] = useState([]);
   const dispatch = useDispatch();
   const [stockError, setStockError] = useState(false);
-  console.log("stock", stock);
 
   useEffect(() => {
     if (success) {
       setShowDialog(false);
+      dispatch(getProductList());
     }
   }, [success]);
 
@@ -60,8 +61,10 @@ const NewItemDialog = ({ mode, showDialog, setShowDialog }) => {
   }, [showDialog]);
 
   const handleClose = () => {
-    //모든걸 초기화시키고;
+    //모든걸 초기화시키고
+    setFormData(InitialFormData);
     // 다이얼로그 닫아주기
+    setShowDialog(false);
   };
 
   const handleSubmit = (event) => {
