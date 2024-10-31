@@ -71,6 +71,7 @@ const AdminProductPage = () => {
 
   const handlePageClick = ({ selected }) => {
     //  쿼리에 페이지값 바꿔주기
+    setSearchQuery({ ...searchQuery, page: selected + 1 });
   };
 
   // searchbox에서 검색어를 읽어온다 => 엔터를 치면 searchQuery객체가 업데이트 됨 {name: 스트레이트 팬츠}
@@ -102,7 +103,7 @@ const AdminProductPage = () => {
           nextLabel="next >"
           onPageChange={handlePageClick}
           pageRangeDisplayed={5}
-          pageCount={100}
+          pageCount={100} // 전체페이지 수
           forcePage={searchQuery.page - 1}
           previousLabel="< previous"
           renderOnZeroPageCount={null}
