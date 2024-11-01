@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import CloudinaryUploadWidget from "../../../utils/CloudinaryUploadWidget";
 import { CATEGORY, STATUS, SIZE } from "../../../constants/product.constants";
 import "../style/adminProduct.style.css";
+import { useSearchParams } from "react-router-dom";
 import {
   clearError,
   createProduct,
@@ -32,11 +33,14 @@ const NewItemDialog = ({ mode, showDialog, setShowDialog }) => {
   const [stock, setStock] = useState([]);
   const dispatch = useDispatch();
   const [stockError, setStockError] = useState(false);
+  const [query] = useSearchParams();
 
   useEffect(() => {
+    const page = query.get("page") || 1;
     if (success) {
       setShowDialog(false);
-      dispatch(getProductList());
+      setFormData({ ...InitialFormData });
+      dispatch(getProductList({ page }));
     }
   }, [success]);
 
@@ -45,6 +49,7 @@ const NewItemDialog = ({ mode, showDialog, setShowDialog }) => {
       dispatch(clearError());
     }
     if (showDialog) {
+      dispatch(clearError());
       if (mode === "edit") {
         setFormData(selectedProduct);
         // 객체형태로 온 stock을  다시 배열로 세팅해주기
@@ -62,7 +67,7 @@ const NewItemDialog = ({ mode, showDialog, setShowDialog }) => {
 
   const handleClose = () => {
     //모든걸 초기화시키고
-    setFormData(InitialFormData);
+    setFormData({ ...InitialFormData });
     // 다이얼로그 닫아주기
     setShowDialog(false);
   };
