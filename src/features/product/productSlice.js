@@ -41,7 +41,20 @@ export const createProduct = createAsyncThunk(
 
 export const deleteProduct = createAsyncThunk(
   "products/deleteProduct",
-  async (id, { dispatch, rejectWithValue }) => {}
+  async (id, { dispatch, rejectWithValue }) => {
+    try {
+      const res = await api.delete(`/product/${id}`);
+      dispatch(
+        showToastMessage({
+          message: "상품을 삭제했습니다",
+          status: "success",
+        })
+      );
+      return res.data;
+    } catch (error) {
+      return rejectWithValue(error.error);
+    }
+  }
 );
 
 export const editProduct = createAsyncThunk(
