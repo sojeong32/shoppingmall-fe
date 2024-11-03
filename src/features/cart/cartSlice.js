@@ -108,6 +108,9 @@ const cartSlice = createSlice({
     initialCart: (state) => {
       state.cartItemCount = 0;
     },
+    resetCartCount: (state) => {
+      state.cartItemCount = 0;
+    },
     // You can still add reducers here for non-async actions if necessary
   },
   extraReducers: (builder) => {
@@ -171,10 +174,21 @@ const cartSlice = createSlice({
       .addCase(updateQty.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
+      })
+      .addCase(getCartQty.pending, (state, action) => {
+        state.loading = true;
+      })
+      .addCase(getCartQty.fulfilled, (state, action) => {
+        state.loading = false;
+        state.error = "";
+        state.cartItemCount = action.payload;
+      })
+      .addCase(getCartQty.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
       });
-    // Add more cases for other async actions
   },
 });
 
 export default cartSlice.reducer;
-export const { initialCart } = cartSlice.actions;
+export const { initialCart, resetCartCount } = cartSlice.actions;

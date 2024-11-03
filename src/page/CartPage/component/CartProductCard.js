@@ -4,16 +4,22 @@ import { Row, Col, Form } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useDispatch } from "react-redux";
 import { currencyFormat } from "../../../utils/number";
-import { updateQty, deleteCartItem } from "../../../features/cart/cartSlice";
+import {
+  updateQty,
+  deleteCartItem,
+  getCartQty,
+} from "../../../features/cart/cartSlice";
 const CartProductCard = ({ item }) => {
   const dispatch = useDispatch();
 
-  const handleQtyChange = (id, value) => {
-    dispatch(updateQty({ id, value }));
+  const handleQtyChange = async (id, value) => {
+    await dispatch(updateQty({ id, value }));
+    await dispatch(getCartQty());
   };
 
-  const deleteCart = (id) => {
-    dispatch(deleteCartItem(id));
+  const deleteCart = async (id) => {
+    await dispatch(deleteCartItem(id));
+    await dispatch(getCartQty());
   };
 
   return (
