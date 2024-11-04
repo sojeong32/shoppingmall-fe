@@ -28,6 +28,7 @@ export const createOrder = createAsyncThunk(
       );
 
       // dispatch(getOrderList({ page: 1 }));
+      console.log("주문생성반응", response.data);
       return response.data.orderNum;
     } catch (error) {
       dispatch(showToastMessage({ message: error.error, status: "error" }));
@@ -68,6 +69,7 @@ const orderSlice = createSlice({
       .addCase(createOrder.fulfilled, (state, action) => {
         state.loading = false;
         state.error = "";
+        console.log("orderNum", action.payload);
         state.orderNum = action.payload;
       })
       .addCase(createOrder.rejected, (state, action) => {
