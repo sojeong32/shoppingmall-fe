@@ -26,8 +26,7 @@ export const createOrder = createAsyncThunk(
           status: "success",
         })
       );
-
-      // dispatch(getOrderList({ page: 1 }));
+      dispatch(getCartQty());
       console.log("주문생성반응", response.data);
       return response.data.orderNum;
     } catch (error) {
