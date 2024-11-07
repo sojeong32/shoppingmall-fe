@@ -16,6 +16,10 @@ const CartPage = () => {
     dispatch(getCartList());
   }, []);
 
+  const filteredCartList = cartList.filter(
+    (item) => item.productId.stock[item.size] > 0
+  );
+
   return (
     <Container>
       <Row>
@@ -32,7 +36,7 @@ const CartPage = () => {
           )}
         </Col>
         <Col xs={12} md={5}>
-          <OrderReceipt cartList={cartList} totalPrice={totalPrice} />
+          <OrderReceipt cartList={filteredCartList} totalPrice={totalPrice} />
         </Col>
       </Row>
     </Container>

@@ -13,6 +13,7 @@ const CartProductCard = ({ item }) => {
   const dispatch = useDispatch();
   const stock = { ...item.productId.stock };
   const stockCount = stock[item.size];
+  const isOutOfStock = stockCount === 0; // 재고가 없는 경우
 
   const handleQtyChange = async (id, value) => {
     await dispatch(updateQty({ id, value }));
@@ -56,8 +57,9 @@ const CartProductCard = ({ item }) => {
               required
               defaultValue={item.qty}
               className="qty-dropdown"
+              disabled={isOutOfStock} // 재고가 없는 경우 비활성화
             >
-              {[...Array(stockCount)].map((_, index) => (
+              {[...Array(isOutOfStock ? 0 : stockCount)].map((_, index) => (
                 <option key={index + 1} value={index + 1}>
                   {index + 1}
                 </option>
@@ -73,6 +75,9 @@ const CartProductCard = ({ item }) => {
               <option value={9}>9</option>
               <option value={10}>10</option> */}
             </Form.Select>
+            {isOutOfStock && (
+              <div className="out-of-stock">재고가 부족합니다</div>
+            )}
           </div>
         </Col>
       </Row>
