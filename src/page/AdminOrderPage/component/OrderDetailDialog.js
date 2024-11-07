@@ -3,19 +3,26 @@ import { Form, Modal, Button, Col, Table } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { ORDER_STATUS } from "../../../constants/order.constants";
 import { currencyFormat } from "../../../utils/number";
-import { updateOrder } from "../../../features/order/orderSlice";
+import { getOrderList, updateOrder } from "../../../features/order/orderSlice";
+import { useSearchParams } from "react-router-dom";
 
 const OrderDetailDialog = ({ open, handleClose }) => {
   const selectedOrder = useSelector((state) => state.order.selectedOrder);
   const [orderStatus, setOrderStatus] = useState(selectedOrder.status);
   const dispatch = useDispatch();
+  const [query] = useSearchParams();
 
+  const searchQuery = {
+    page: query.get("page") || 1,
+    ordernum: query.get("ordernum") || "",
+  };
   const handleStatusChange = (event) => {
     setOrderStatus(event.target.value);
   };
   const submitStatus = () => {
     dispatch(updateOrder({ id: selectedOrder._id, status: orderStatus }));
     handleClose();
+    dispatch(getOrderList({ ...searchQuery }));
   };
 
   if (!selectedOrder) {
@@ -57,9 +64,11 @@ const OrderDetailDialog = ({ open, handleClose }) => {
                   <tr key={item._id}>
                     <td>{item._id}</td>
                     <td>{item.productId.name}</td>
-                    <td>{currencyFormat(item.price)}</td>
+                    <td>{currencyFormat(item.productId.discountPrice)}</td>
                     <td>{item.qty}</td>
-                    <td>{currencyFormat(item.price * item.qty)}</td>
+                    <td>
+                      {currencyFormat(item.productId.discountPrice * item.qty)}
+                    </td>
                   </tr>
                 ))}
               <tr>
