@@ -11,12 +11,15 @@ import {
   deleteProduct,
   setSelectedProduct,
 } from "../../features/product/productSlice";
+import { ColorRing } from "react-loader-spinner";
 
 const AdminProductPage = () => {
   const navigate = useNavigate();
   const [query] = useSearchParams();
   const dispatch = useDispatch();
-  const { productList, totalPageNum } = useSelector((state) => state.product);
+  const { loading, productList, totalPageNum } = useSelector(
+    (state) => state.product
+  );
   const [showDialog, setShowDialog] = useState(false);
   const [searchQuery, setSearchQuery] = useState({
     page: query.get("page") || 1,
@@ -84,6 +87,28 @@ const AdminProductPage = () => {
   // searchbox에서 검색어를 읽어온다 => 엔터를 치면 searchQuery객체가 업데이트 됨 {name: 스트레이트 팬츠}
   // => searchQuery객체 안에 아이템을 기준으로 url을 새로 생성해서 호출 &name=스트레이트+팬츠
   // => url쿼리 읽어오기 => url쿼리 기준으로 백엔드에 검색 조건과 함께 호출한다
+
+  if (loading || !productList)
+    return (
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          height: "100%",
+        }}
+      >
+        <ColorRing
+          visible={true}
+          height="80"
+          width="80"
+          ariaLabel="blocks-loading"
+          wrapperStyle={{}}
+          wrapperClass="blocks-wrapper"
+          colors={["#e15b64", "#f47e60", "#f8b26a", "#abbd81", "#849b87"]}
+        />
+      </div>
+    );
 
   return (
     <div className="locate-center">
