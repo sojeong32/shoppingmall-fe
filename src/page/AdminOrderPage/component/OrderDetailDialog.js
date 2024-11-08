@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Form, Modal, Button, Col, Table } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { ORDER_STATUS } from "../../../constants/order.constants";
@@ -19,15 +19,24 @@ const OrderDetailDialog = ({ open, handleClose }) => {
   const handleStatusChange = (event) => {
     setOrderStatus(event.target.value);
   };
-  const submitStatus = () => {
-    dispatch(updateOrder({ id: selectedOrder._id, status: orderStatus }));
-    handleClose();
-    dispatch(getOrderList({ ...searchQuery }));
+  const submitStatus = async (e) => {
+    e.preventDefault();
+    try {
+      await dispatch(
+        updateOrder({ id: selectedOrder._id, status: orderStatus })
+      ).unwrap();
+      dispatch(getOrderList({ ...searchQuery }));
+      handleClose();
+    } catch (error) {
+      console.error("상태 업데이트 실패:", error);
+    }
   };
 
   if (!selectedOrder) {
     return <></>;
   }
+  console.log("선택한주문", selectedOrder);
+
   return (
     <Modal show={open} onHide={handleClose}>
       <Modal.Header closeButton>
@@ -64,11 +73,9 @@ const OrderDetailDialog = ({ open, handleClose }) => {
                   <tr key={item._id}>
                     <td>{item._id}</td>
                     <td>{item.productId.name}</td>
-                    <td>{currencyFormat(item.productId.discountPrice)}</td>
+                    <td>{currencyFormat(item.price)}</td>
                     <td>{item.qty}</td>
-                    <td>
-                      {currencyFormat(item.productId.discountPrice * item.qty)}
-                    </td>
+                    <td>{currencyFormat(item.price * item.qty)}</td>
                   </tr>
                 ))}
               <tr>

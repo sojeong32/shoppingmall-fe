@@ -41,7 +41,7 @@ export const getOrder = createAsyncThunk(
   async (_, { rejectWithValue, dispatch }) => {
     try {
       const response = await api.get(`/order`);
-      return response.data.orders;
+      return response.data;
     } catch (error) {
       return rejectWithValue(error.error);
     }
@@ -52,7 +52,11 @@ export const getOrderList = createAsyncThunk(
   "order/getOrderList",
   async (query, { rejectWithValue, dispatch }) => {
     try {
-      const response = await api.get("/order", { params: { ...query } });
+      const response = await api.get("/order/list", {
+        params: { ...query },
+      });
+      console.log("주문내역", response.data);
+      if (response.status !== 200) throw new Error(response.error);
       return response.data;
     } catch (error) {
       return rejectWithValue(error.error);
@@ -64,7 +68,7 @@ export const updateOrder = createAsyncThunk(
   "order/updateOrder",
   async ({ id, status }, { dispatch, rejectWithValue }) => {
     try {
-      const response = await api.put(`/order/${id}`, { status });
+      const response = await api.put(`/order/${id}`, { id, status });
       if (response.status !== 200) throw new Error(response.error);
       dispatch(
         showToastMessage({
@@ -72,6 +76,7 @@ export const updateOrder = createAsyncThunk(
           status: "success",
         })
       );
+      console.log("주문상태변경반응", response.data);
       return response.data;
     } catch (error) {
       dispatch(showToastMessage({ message: error.error, status: "error" }));
@@ -110,7 +115,7 @@ const orderSlice = createSlice({
       .addCase(getOrder.fulfilled, (state, action) => {
         state.loading = false;
         state.error = "";
-        state.orderList = action.payload;
+        state.orderList = action.payload.data;
       })
       .addCase(getOrder.rejected, (state, action) => {
         state.loading = false;
@@ -122,21 +127,23 @@ const orderSlice = createSlice({
       .addCase(getOrderList.fulfilled, (state, action) => {
         state.loading = false;
         state.error = "";
-        state.orderList = action.payload.orders;
-        state.totalPageNum = action.payload.pages;
+        state.orderList = action.payload.data;
+        state.totalPageNum = action.payload.totalPageNum;
       })
       .addCase(getOrderList.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
       })
       .addCase(updateOrder.pending, (state) => {
-        state.statusLoading = true;
+        state.loading = true;
       })
-      .addCase(updateOrder.fulfilled, (state) => {
-        state.statusLoading = false;
+      .addCase(updateOrder.fulfilled, (state, action) => {
+        state.loading = false;
+        state.error = "";
+        state.orderList = action.payload.data;
       })
       .addCase(updateOrder.rejected, (state, action) => {
-        state.statusLoading = false;
+        state.loading = false;
         state.error = action.payload;
       });
   },
