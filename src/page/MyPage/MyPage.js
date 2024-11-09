@@ -1,21 +1,34 @@
 import React from "react";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Container } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import OrderStatusCard from "./component/OrderStatusCard";
 import "./style/orderStatus.style.css";
-import { getOrder } from "../../features/order/orderSlice";
+import { getOrder, setSelectedOrder } from "../../features/order/orderSlice";
 import { ColorRing } from "react-loader-spinner";
+import OrderDetailModal from "./component/OrderDetailModal";
 
 const MyPage = () => {
   const dispatch = useDispatch();
-  const { loading, orderList } = useSelector((state) => state.order);
-  console.log(orderList);
+  const { loading, orderList, selectedOrder } = useSelector(
+    (state) => state.order
+  );
+  const [open, setOpen] = useState(false);
+
   useEffect(() => {
     dispatch(getOrder());
   }, [dispatch]);
 
-  if (loading || !orderList)
+  const handleCardClick = (order) => {
+    dispatch(setSelectedOrder(order));
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+
+  if (loading)
     return (
       <div
         style={{
@@ -51,8 +64,26 @@ const MyPage = () => {
           orderItem={item}
           className="status-card-container"
           key={item._id}
+          onClick={() => handleCardClick(item)}
         />
       ))}
+      {open && selectedOrder && Object.keys(selectedOrder).length > 0 && (
+        <OrderDetailModal
+          open={open}
+          handleClose={handleClose}
+          data={selectedOrder}
+          header={[
+            "번호",
+            "주문번호",
+            "주문날짜",
+            "이메일",
+            "상품명",
+            "주소",
+            "총 금액",
+            "상태",
+          ]}
+        />
+      )}
     </Container>
   );
 };

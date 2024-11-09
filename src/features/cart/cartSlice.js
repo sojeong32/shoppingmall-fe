@@ -134,10 +134,9 @@ const cartSlice = createSlice({
         state.loading = false;
         state.error = "";
         state.cartList = action.payload;
-        state.totalPrice = action.payload.reduce(
-          (total, item) => total + item.productId.price * item.qty,
-          0
-        );
+        state.totalPrice = action.payload
+          .filter((item) => item.productId.stock[item.size] > 0)
+          .reduce((total, item) => total + item.productId.price * item.qty, 0);
       })
       .addCase(getCartList.rejected, (state, action) => {
         state.loading = false;
@@ -168,10 +167,9 @@ const cartSlice = createSlice({
         state.cartList = action.payload.filter(
           (item) => item.productId.stock[item.size] > 0 // 해당 size의 재고가 0보다 큰 상품만 추가
         );
-        state.totalPrice = action.payload.reduce(
-          (total, item) => total + item.productId.price * item.qty,
-          0
-        );
+        state.totalPrice = action.payload
+          .filter((item) => item.productId.stock[item.size] > 0)
+          .reduce((total, item) => total + item.productId.price * item.qty, 0);
       })
       .addCase(updateQty.rejected, (state, action) => {
         state.loading = false;

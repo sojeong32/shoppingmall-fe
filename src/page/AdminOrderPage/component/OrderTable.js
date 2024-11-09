@@ -10,7 +10,7 @@ const OrderTable = ({ header, data, openEditForm }) => {
         <thead>
           <tr>
             {header.map((title, index) => (
-              <th key={index}>{title}</th>
+              <td key={index}>{title}</td>
             ))}
           </tr>
         </thead>
