@@ -26,6 +26,12 @@ export const addToCart = createAsyncThunk(
       );
       return response.data.cartItemQty; // TODO
     } catch (error) {
+      dispatch(
+        showToastMessage({
+          message: error.error,
+          status: "error",
+        })
+      );
       return rejectWithValue(error.error);
     }
   }
@@ -58,6 +64,12 @@ export const deleteCartItem = createAsyncThunk(
       );
       return response.data.data;
     } catch (error) {
+      dispatch(
+        showToastMessage({
+          message: error.error,
+          status: "error",
+        })
+      );
       return rejectWithValue(error.error);
     }
   }
