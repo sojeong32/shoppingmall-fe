@@ -38,7 +38,7 @@ const Login = () => {
 
   const handleGoogleLogin = async (googleData) => {
     //구글 로그인 하기
-    console.log("hehe", googleData);
+    dispatch(loginWithGoogle(googleData.credential));
   };
 
   // 로그인 후 유저정보가 있는 경우 로그인페이지를 보여주지 않도록 함
