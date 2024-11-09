@@ -42,7 +42,7 @@ export const loginWithGoogle = createAsyncThunk(
 
 export const logout = createAsyncThunk(
   "user/logout",
-  async (_, { dispatch }) => {
+  async (navigate, { dispatch }) => {
     try {
       // 로컬 스토리지의 토큰 제거
       sessionStorage.removeItem("token");
@@ -54,6 +54,7 @@ export const logout = createAsyncThunk(
         })
       );
 
+      navigate("/");
       return null;
     } catch (error) {
       console.error("Logout error:", error);
