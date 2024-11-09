@@ -1,15 +1,24 @@
-.login-button-area{
-    align-items: center;
+.login-button-area {
+  align-items: center;
 }
 
-.login-form{
-    width: 100%;
-      
-  }
-  .login-area{
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    max-width: 550px;
-  }
+.login-form {
+  width: 100%;
+}
+.login-area {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  max-width: 550px;
+  padding: 0 20px;
+}
+
+.google-login-container {
+  width: 100%;
+  max-width: 300px;
+  display: flex;
+  justify-content: center;
+  margin-top: 10px;
+}
