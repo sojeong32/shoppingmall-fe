@@ -2,7 +2,6 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 
 import { showToastMessage } from "../common/uiSlice";
 import api from "../../utils/api";
-import { initialCart } from "../cart/cartSlice";
 
 export const loginWithEmail = createAsyncThunk(
   "user/loginWithEmail",
@@ -21,14 +20,6 @@ export const loginWithEmail = createAsyncThunk(
       navigate("/");
       return response.data;
     } catch (error) {
-      // 실패
-      // 실패시 토스트 메세지 보여주고 생긴 에러값을 reducer에 저장
-      dispatch(
-        showToastMessage({
-          message: "로그인에 실패했습니다",
-          status: "error",
-        })
-      );
       return rejectWithValue(error.error);
     }
   }

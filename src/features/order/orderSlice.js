@@ -27,10 +27,11 @@ export const createOrder = createAsyncThunk(
         })
       );
       dispatch(getCartQty());
-      console.log("주문생성반응", response.data);
       return response.data.orderNum;
     } catch (error) {
-      dispatch(showToastMessage({ message: error.error, status: "error" }));
+      dispatch(
+        showToastMessage({ message: "주문을 실패했습니다.", status: "error" })
+      );
       return rejectWithValue(error.error);
     }
   }
@@ -55,7 +56,6 @@ export const getOrderList = createAsyncThunk(
       const response = await api.get("/order/list", {
         params: { ...query },
       });
-      console.log("주문내역", response.data);
       if (response.status !== 200) throw new Error(response.error);
       return response.data;
     } catch (error) {
@@ -72,14 +72,18 @@ export const updateOrder = createAsyncThunk(
       if (response.status !== 200) throw new Error(response.error);
       dispatch(
         showToastMessage({
-          message: "주문 상태가 성공적으로 변경되었습니다.",
+          message: "주문상태가 성공적으로 변경되었습니다.",
           status: "success",
         })
       );
-      console.log("주문상태변경반응", response.data);
       return response.data;
     } catch (error) {
-      dispatch(showToastMessage({ message: error.error, status: "error" }));
+      dispatch(
+        showToastMessage({
+          message: "주문상태를 변경하지 못했습니다.",
+          status: "error",
+        })
+      );
       return rejectWithValue(error.error);
     }
   }
@@ -102,7 +106,6 @@ const orderSlice = createSlice({
       .addCase(createOrder.fulfilled, (state, action) => {
         state.loading = false;
         state.error = "";
-        console.log("orderNum", action.payload);
         state.orderNum = action.payload;
       })
       .addCase(createOrder.rejected, (state, action) => {

@@ -45,10 +45,8 @@ const AdminOrderPage = () => {
     if (searchQuery.ordernum === "") {
       delete searchQuery.ordernum;
     }
-    console.log("searchQuery", searchQuery);
     const params = new URLSearchParams(searchQuery);
     const queryString = params.toString();
-    console.log("queryString", queryString);
 
     navigate("?" + queryString);
   }, [searchQuery]);

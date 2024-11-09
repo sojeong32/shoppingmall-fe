@@ -35,7 +35,6 @@ const OrderDetailDialog = ({ open, handleClose }) => {
   if (!selectedOrder) {
     return <></>;
   }
-  console.log("선택한주문", selectedOrder);
 
   return (
     <Modal show={open} onHide={handleClose}>

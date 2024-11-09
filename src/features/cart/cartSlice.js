@@ -26,12 +26,6 @@ export const addToCart = createAsyncThunk(
       );
       return response.data.cartItemQty; // TODO
     } catch (error) {
-      dispatch(
-        showToastMessage({
-          message: error.error,
-          status: "error",
-        })
-      );
       return rejectWithValue(error.error);
     }
   }
@@ -64,12 +58,6 @@ export const deleteCartItem = createAsyncThunk(
       );
       return response.data.data;
     } catch (error) {
-      dispatch(
-        showToastMessage({
-          message: error.error,
-          status: "error",
-        })
-      );
       return rejectWithValue(error.error);
     }
   }
@@ -111,7 +99,6 @@ const cartSlice = createSlice({
     resetCartCount: (state) => {
       state.cartItemCount = 0;
     },
-    // You can still add reducers here for non-async actions if necessary
   },
   extraReducers: (builder) => {
     builder

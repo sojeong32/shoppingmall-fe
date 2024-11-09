@@ -74,8 +74,7 @@ const NewItemDialog = ({ mode, showDialog, setShowDialog }) => {
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    console.log("formdata", formData);
-    console.log("formdata", stock);
+
     //재고를 입력했는지 확인, 아니면 에러
     if (stock.length === 0) return setStockError(true);
 
@@ -83,7 +82,6 @@ const NewItemDialog = ({ mode, showDialog, setShowDialog }) => {
     const totalStock = stock.reduce((total, item) => {
       return { ...total, [item[0]]: parseInt(item[1]) };
     }, {});
-    console.log("formdata", totalStock);
 
     // [['M',2]] 에서 {M:2}로
     if (mode === "new") {

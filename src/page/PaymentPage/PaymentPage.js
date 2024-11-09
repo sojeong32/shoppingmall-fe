@@ -35,7 +35,6 @@ const PaymentPage = () => {
     (item) => item.productId.stock[item.size] > 0
   );
 
-  console.log("shipInfo", shipInfo);
   // 맨처음 페이지 로딩할 때는 넘어가고 오더번호를 받으면 성공페이지로 넘어가기
 
   useEffect(() => {
